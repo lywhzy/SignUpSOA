@@ -2,12 +2,10 @@ package lyw.demo;
 
 import lyw.demo.Listener.Listener;
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import tk.mybatis.spring.annotation.MapperScan;
 
-@SpringCloudApplication
-@EnableFeignClients
+@SpringBootApplication
 @MapperScan("lyw.demo.mapper")
 public class ContestServiceApplication {
 

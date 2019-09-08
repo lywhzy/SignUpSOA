@@ -11,6 +11,7 @@
         <module>ContestService</module>
         <module>UserService</module>
         <module>EurekaServer</module>
+        <module>SignUpRoot</module>
     </modules>
     <packaging>pom</packaging>
 
