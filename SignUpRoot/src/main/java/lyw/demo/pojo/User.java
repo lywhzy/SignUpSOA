@@ -24,7 +24,7 @@ public class User implements Serializable {
 
     private String password;
 
-    private Integer level;
+    private String level;
 
     @Transient
     private List<Contest> contests;

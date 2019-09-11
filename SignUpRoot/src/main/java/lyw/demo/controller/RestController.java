@@ -36,6 +36,11 @@ public class RestController {
         return auditService.findNotAudit();
     }
 
+    @GetMapping("getMyContest")
+    public List<Contest> getContestByUid(int uid){
+        List<Contest> list = auditService.selectByUid(uid);
+        return  list;
+    }
 
     /**
      *  根据比赛id获得该比赛的栏目信息

@@ -29,6 +29,11 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
+    public List<Contest> selectByUid(int uid) {
+        return contestMapper.selectByUserId(uid);
+    }
+
+    @Override
     public List<Column_info> findByCid(int cid) {
         Example example = new Example(Column_info.class);
         Example.Criteria criteria = example.createCriteria();
@@ -41,6 +46,8 @@ public class AuditServiceImpl implements AuditService {
     public void UpdateCheckStatus(int cid) {
         contestMapper.updateCheckStatusByCid(cid);
     }
+
+
 
     @Override
     public void UpdateDisplay(int cid) {
