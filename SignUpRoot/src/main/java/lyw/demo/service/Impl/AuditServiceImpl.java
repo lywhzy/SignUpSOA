@@ -30,7 +30,14 @@ public class AuditServiceImpl implements AuditService {
 
     @Override
     public List<Contest> selectByUid(int uid) {
-        return contestMapper.selectByUserId(uid);
+
+        List<Contest> contests = contestMapper.selectByUserId(uid);
+
+        contests.forEach(contest -> {
+            setStatus(contest);
+        });
+
+        return contests;
     }
 
     @Override
@@ -53,5 +60,13 @@ public class AuditServiceImpl implements AuditService {
     public void UpdateDisplay(int cid) {
         Boolean display = contestMapper.selectDisplayByCid(cid);
         contestMapper.updateDisplayByCid(cid,display);
+    }
+
+    private void setStatus(Contest contest){
+        Boolean checkStatus = contestMapper.selectCheckStatusByCid(contest.getId());
+        String status = null;
+        if(checkStatus) status = "已审核";
+        else status = "未审核";
+        contest.setStatus(status);
     }
 }

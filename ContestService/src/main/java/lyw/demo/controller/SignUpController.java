@@ -26,7 +26,7 @@ import java.util.Map;
 
 @RestController
 @Slf4j
-public class SignUpController {
+public class SignUpController extends BaseController{
 
     @Autowired
     private ColumnService columnService;
@@ -47,7 +47,9 @@ public class SignUpController {
         long time = 0L;
         long endTime = 0L;
 
-        Request request = new ColumnSelectRequest(columnService,cacheService,cid);
+        Integer uid = (Integer) httpSession.getAttribute("uid");
+
+        Request request = new ColumnSelectRequest(columnService,cacheService,cid,uid);
         routeService.process(request);
 
         while(true){
@@ -61,7 +63,7 @@ public class SignUpController {
                     endTime = System.currentTimeMillis();
                     time = endTime - startTime;
                 }else{
-                    columnService.setColumnListForValue(list,1);
+                    columnService.setColumnListForValue(list,uid);
                     columnService.setColumnListForAlters(list);
                     return list;
                 }
@@ -69,7 +71,7 @@ public class SignUpController {
 
             }
         }
-        return columnService.listByCId(cid,1);
+        return columnService.listByCId(cid,uid);
     }
 
     @PostMapping(value = "update",produces="application/json; utf-8")
@@ -134,7 +136,7 @@ public class SignUpController {
         Integer key = Integer.parseInt((String) entry.getKey());
         String value = (String) entry.getValue();
         Column_value column_value = new Column_value();
-        column_value.setUid(1);
+        column_value.setUid((Integer) httpSession.getAttribute("uid"));
         column_value.setCid(key);
         column_value.setValue(value);
         return column_value;

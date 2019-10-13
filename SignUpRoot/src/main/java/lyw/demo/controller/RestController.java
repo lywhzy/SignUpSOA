@@ -3,18 +3,18 @@ package lyw.demo.controller;
 import lyw.demo.pojo.Alternative;
 import lyw.demo.pojo.Column_info;
 import lyw.demo.pojo.Contest;
+import lyw.demo.pojo.User;
 import lyw.demo.service.AlternativeService;
 import lyw.demo.service.AuditService;
 import lyw.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.web.bind.annotation.RestController
+@CrossOrigin
 public class RestController {
 
     @Autowired
@@ -85,13 +85,18 @@ public class RestController {
         return "true";
     }
 
+    @GetMapping("user")
+    public List<User> findRoots(){
+        return userService.findRoots();
+    }
+
 
     /**
      * 删除管理员用户
      * @param id
      * @return
      */
-    @DeleteMapping("user")
+    @GetMapping("deleteUser")
     public String deleteUser(int id){
         try{
             userService.daleteRoot(id);
@@ -103,18 +108,19 @@ public class RestController {
 
     /**
      * 注册管理员用户
-     * @param username
-     * @param password
      * @return
      */
     @PostMapping("user")
-    public String registerRoot(String username,String password){
+    public String registerRoot(@RequestBody Map map){
         try{
+            String username = (String) map.get("username");
+            String password = (String) map.get("password");
+            if(userService.findUserByname(username)==null) return "该用户已注册";
             userService.registerRoot(username,password);
         }catch (Exception e){
-            return "false";
+            return "注册异常";
         }
-        return "true";
+        return "注册成功";
     }
 
     @GetMapping("alter")

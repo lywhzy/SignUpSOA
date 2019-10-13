@@ -14,18 +14,20 @@ public class ColumnSelectRequest implements Request {
     private ColumnService columnService;
     private CacheService cacheService;
     private int contestId;
+    private int uid;
 
-    public ColumnSelectRequest(ColumnService columnService, CacheService cacheService, int contestId) {
+    public ColumnSelectRequest(ColumnService columnService, CacheService cacheService, int contestId, int uid) {
         this.columnService = columnService;
         this.cacheService = cacheService;
         this.contestId = contestId;
+        this.uid = uid;
     }
 
     @Override
     public void process() {
         List<Column_info> list = cacheService.selectListCache(getContestId());
         if(list==null||list.isEmpty()) {
-            List<Column_info> clist = columnService.listByCIdForCache(getContestId(), 1);
+            List<Column_info> clist = columnService.listByCIdForCache(getContestId(), uid);
             cacheService.setListCache(clist);
         }
     }

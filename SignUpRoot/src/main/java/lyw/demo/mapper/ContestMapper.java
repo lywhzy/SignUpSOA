@@ -23,4 +23,7 @@ public interface ContestMapper extends Mapper<Contest> {
 
     @Select("select  c.* from contest c,user_contest uc,status s where uc.uid=#{uid} and uc.cid=c.id and s.cid=c.id and s.display=true")
     List<Contest> selectByUserId(int uid);
+
+    @Select("select checkstatus from status where cid=#{cid}")
+    Boolean selectCheckStatusByCid(@Param("cid") int cid);
 }

@@ -11,4 +11,5 @@ public interface ContestService extends BaseService<Contest>{
     String NotOpen = "暂未开放";
     List<Contest> listByUId(int uid);
     List<Contest> getTopCharacterization();
+    Contest getById(int cid);
 }

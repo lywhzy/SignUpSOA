@@ -51,6 +51,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
+    public Contest getById(int cid) {
+        return contestMapper.selectByPrimaryKey(cid);
+    }
+
+    @Override
     public Contest get(int id) {
         return contestMapper.selectByPrimaryKey(id);
     }
