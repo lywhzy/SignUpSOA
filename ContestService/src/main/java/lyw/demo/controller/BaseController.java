@@ -7,26 +7,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class BaseController {
 
     protected HttpServletRequest request;
 
-    protected HttpSession httpSession;
+    protected Integer uid;
+
 
     @Autowired
     private RedisTemplate redisTemplate;
 
     @ModelAttribute
     public void setUID(HttpServletRequest request){
-        HttpSession httpSession = request.getSession();
         String uid = request.getParameter("uuid");
         if(!StringUtils.isBlank(uid)){
-            if(httpSession.getAttribute("uid") == null){
-                httpSession.setAttribute("uid",redisTemplate.opsForValue().get("uuid"));
-            }
+            this.uid = (Integer) redisTemplate.opsForValue().get(uid);
         }
     }
 }

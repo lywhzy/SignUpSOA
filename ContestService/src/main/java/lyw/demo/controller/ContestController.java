@@ -1,13 +1,15 @@
 package lyw.demo.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import lyw.demo.pojo.Contest;
 import lyw.demo.service.ContestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import tk.mybatis.mapper.entity.Example;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ContestController extends BaseController{
@@ -24,7 +26,8 @@ public class ContestController extends BaseController{
 
     @GetMapping("getMyContest")
     public List<Contest> getContestByUid(){
-        Integer uid = (Integer) httpSession.getAttribute("uid");
+        Integer uid = super.uid;
+        if(uid == null) return null;
         List<Contest> list = contestService.listByUId(uid);
         return  list;
     }
@@ -37,6 +40,20 @@ public class ContestController extends BaseController{
 
     @GetMapping("getContestById")
     public String getContest(int cid){
-        return contestService.getById(cid).getName();
+        String name = contestService.getById(cid).getName();
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("name",name);
+
+        JSONObject jsonObject = new JSONObject(map);
+
+        return jsonObject.toJSONString();
+    }
+
+    @GetMapping("checkSignUp")
+    public String CheckSignUp(int cid){
+        if(contestService.CheckSign(uid,cid)) return "true";
+        else return "false";
     }
 }

@@ -32,4 +32,6 @@ public class Contest implements Serializable {
     private List<User> users;
     @Transient
     private String status;
+    @Transient
+    private String display;
 }

@@ -12,4 +12,5 @@ public interface ContestService extends BaseService<Contest>{
     List<Contest> listByUId(int uid);
     List<Contest> getTopCharacterization();
     Contest getById(int cid);
+    Boolean CheckSign(int uid,int cid);
 }

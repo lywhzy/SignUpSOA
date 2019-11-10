@@ -1,30 +1,24 @@
 package lyw.demo.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import lyw.demo.pojo.Column_info;
 import lyw.demo.pojo.Column_value;
-import lyw.demo.pojo.Contest;
 import lyw.demo.service.Cache.CacheService;
 import lyw.demo.service.ColumnService;
-import lyw.demo.service.ContestService;
 import lyw.demo.service.Request.Request;
 import lyw.demo.service.Request.RequestImpl.ColumnSelectRequest;
 import lyw.demo.service.Route.RouteService;
 import lyw.demo.service.SignUpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 @Slf4j
 public class SignUpController extends BaseController{
 
@@ -47,7 +41,8 @@ public class SignUpController extends BaseController{
         long time = 0L;
         long endTime = 0L;
 
-        Integer uid = (Integer) httpSession.getAttribute("uid");
+        Integer uid = super.uid;
+        if(uid==null) return null;
 
         Request request = new ColumnSelectRequest(columnService,cacheService,cid,uid);
         routeService.process(request);
@@ -74,8 +69,8 @@ public class SignUpController extends BaseController{
         return columnService.listByCId(cid,uid);
     }
 
-    @PostMapping(value = "update",produces="application/json; utf-8")
-    public String update(@RequestBody String jsonStr){
+    @GetMapping(value = "update")
+    public String update(String jsonStr){
         try{
             JSONObject jsonObject = JSONObject.parseObject(jsonStr);
             for(Map.Entry entry : jsonObject.entrySet()){
@@ -93,9 +88,10 @@ public class SignUpController extends BaseController{
         return "success";
     }
 
-    @PostMapping(value = "keep",produces="application/json; utf-8")
-    public String keep(@RequestBody String jsonStr){
+    @GetMapping(value = "keep")
+    public String keep(String jsonStr){
         try{
+            System.out.println(jsonStr);
             JSONObject jsonObject = JSONObject.parseObject(jsonStr);
             for(Map.Entry entry : jsonObject.entrySet()){
                 Column_value column_value = getColumn_value(entry);
@@ -112,8 +108,8 @@ public class SignUpController extends BaseController{
         return "success";
     }
 
-    @PostMapping(value = "signup",produces="application/json; utf-8")
-    public String signup(@RequestBody String jsonStr){
+    @GetMapping(value = "signup")
+    public String signup(String jsonStr){
         try{
             JSONObject jsonObject = JSONObject.parseObject(jsonStr);
             for(Map.Entry entry : jsonObject.entrySet()){
@@ -133,10 +129,11 @@ public class SignUpController extends BaseController{
     }
 
     private Column_value getColumn_value(Map.Entry entry) {
-        Integer key = Integer.parseInt((String) entry.getKey());
+        Integer key = Integer.parseInt(entry.getKey().toString());
+        if(super.uid==null) return null;
         String value = (String) entry.getValue();
         Column_value column_value = new Column_value();
-        column_value.setUid((Integer) httpSession.getAttribute("uid"));
+        column_value.setUid(super.uid);
         column_value.setCid(key);
         column_value.setValue(value);
         return column_value;

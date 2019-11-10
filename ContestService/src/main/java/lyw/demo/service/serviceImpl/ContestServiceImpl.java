@@ -56,6 +56,11 @@ public class ContestServiceImpl implements ContestService {
     }
 
     @Override
+    public Boolean CheckSign(int uid, int cid) {
+        return contestMapper.selectRelation(uid,cid) != null;
+    }
+
+    @Override
     public Contest get(int id) {
         return contestMapper.selectByPrimaryKey(id);
     }
@@ -108,7 +113,7 @@ public class ContestServiceImpl implements ContestService {
         ReentrantReadWriteLock.ReadLock readLock = lock.readLock();
         readLock.lock();
         try{
-            list = list = contestMapper.selectAll();
+            list = contestMapper.selectAll();
             setContestStatus(list);
             redisTemplate.opsForList().rightPushAll("allContest",list);
             redisTemplate.expire("allContest",1, TimeUnit.DAYS);

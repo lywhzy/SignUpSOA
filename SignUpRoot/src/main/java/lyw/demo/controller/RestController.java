@@ -36,9 +36,25 @@ public class RestController {
         return auditService.findNotAudit();
     }
 
+    /**
+     * 得到该管理员已审核的比赛
+     * @param uid
+     * @return
+     */
     @GetMapping("getMyContest")
     public List<Contest> getContestByUid(int uid){
         List<Contest> list = auditService.selectByUid(uid);
+        return  list;
+    }
+
+    /**
+     * 得到该管理员未上线的比赛
+     * @param uid
+     * @return
+     */
+    @GetMapping("getMyContestDis")
+    public List<Contest> getContestByUidDis(int uid){
+        List<Contest> list = auditService.selectDis(uid);
         return  list;
     }
 
@@ -72,10 +88,12 @@ public class RestController {
 
     /**
      * 修改可见状态
-     * @param cid
+     * @param cid 比赛id
+     * 调用格式为： Display?cid=??
+     * method :get
      * @return
      */
-    @PutMapping("Display")
+    @GetMapping("Display")
     public String updateDisplay(int cid){
         try{
             auditService.UpdateDisplay(cid);

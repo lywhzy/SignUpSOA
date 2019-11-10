@@ -3,9 +3,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: nb
     password: 654321
-    jdbc-url: jdbc:mysql://localhost:33306/signup?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
+    jdbc-url: jdbc:mysql://192.168.43.100:3306/signup?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
   redis:
-    host: localhost
+    host: 192.168.43.100
     database: 0
     port: 6379
     password:
@@ -15,7 +15,7 @@ spring:
         max-wait: -1
         max-idle: 8
         min-idle: 0
-    timeout: 1200
+    timeout: 2000
   application:
     name: ContestService
 

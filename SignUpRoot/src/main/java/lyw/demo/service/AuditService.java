@@ -10,6 +10,8 @@ public interface AuditService {
     List<Contest> findNotAudit();
 
     List<Contest> selectByUid(int uid);
+
+    List<Contest> selectDis(int uid);
     //根据比赛id查询栏目信息
     List<Column_info> findByCid(int cid);
 

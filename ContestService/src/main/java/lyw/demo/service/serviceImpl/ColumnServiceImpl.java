@@ -1,10 +1,7 @@
 package lyw.demo.service.serviceImpl;
 
 import lombok.extern.slf4j.Slf4j;
-import lyw.demo.mapper.AlternativeMapper;
-import lyw.demo.mapper.Column_infoMapper;
-import lyw.demo.mapper.Column_valueMapper;
-import lyw.demo.mapper.ContestMapper;
+import lyw.demo.mapper.*;
 import lyw.demo.pojo.*;
 import lyw.demo.service.Cache.CacheImpl.ColumnValueCache;
 import lyw.demo.service.Cache.CacheService;
@@ -36,6 +33,9 @@ public class ColumnServiceImpl implements ColumnService {
 
     @Autowired
     private AlternativeMapper alternativeMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     @Qualifier("alternativeCache")
@@ -150,28 +150,28 @@ public class ColumnServiceImpl implements ColumnService {
 
     private void setColumnForTkValue(Column_info column_info,int uid) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
-//        User user = userService.get(uid);
-//        User_info user_info = userService.getInfo(uid);
-//        String key = column_info.getName();
-//        if(user==null&&user_info==null) return;
-//        Class clazz = null;
-//        String value = null;
-//        String methodName = null;
-//        if(keyName.containsKey(key))
-//            methodName = keyName.get(key);
-//        else return;
-//        methodName = "get" + methodName;
-//        if(key.equals("手机号")||key.equals("邮箱")){
-//            clazz = User.class;
-//            Method method = clazz.getMethod(methodName,null);
-//            value = (String) method.invoke(user,null);
-//        }else{
-//            clazz = User_info.class;
-//            Method method = clazz.getMethod(methodName,null);
-//            value = (String) method.invoke(user_info,null);
-//        }
-//        if(!StringUtils.isBlank(value))
-//            column_info.setValue(value);
+        User user = userMapper.selectByPrimaryKey(uid);
+        User_info user_info = userMapper.selectInfo(uid);
+        String key = column_info.getName();
+        if(user==null&&user_info==null) return;
+        Class clazz = null;
+        String value = null;
+        String methodName = null;
+        if(keyName.containsKey(key))
+            methodName = keyName.get(key);
+        else return;
+        methodName = "get" + methodName;
+        if(key.equals("手机号")||key.equals("邮箱")){
+            clazz = User.class;
+            Method method = clazz.getMethod(methodName,null);
+            value = (String) method.invoke(user,null);
+        }else{
+            clazz = User_info.class;
+            Method method = clazz.getMethod(methodName,null);
+            value = (String) method.invoke(user_info,null);
+        }
+        if(!StringUtils.isBlank(value))
+            column_info.setValue(value);
     }
 
     private void setColumnForValueFromCache(Column_info column_info,int uid){

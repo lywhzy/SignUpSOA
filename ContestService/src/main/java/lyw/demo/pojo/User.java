@@ -3,6 +3,7 @@ package lyw.demo.pojo;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -18,7 +19,8 @@ public class User implements Serializable {
 
     private String username;
 
-    private String phonenumber;
+    @Column(name = "phonenumber")
+    private String phoneNumber;
 
     private String email;
 

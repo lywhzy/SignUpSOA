@@ -41,6 +41,17 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
+    public List<Contest> selectDis(int uid) {
+        List<Contest> contests = contestMapper.selectDis(uid);
+
+        contests.forEach(contest -> {
+            setStatus(contest);
+        });
+
+        return contests;
+    }
+
+    @Override
     public List<Column_info> findByCid(int cid) {
         Example example = new Example(Column_info.class);
         Example.Criteria criteria = example.createCriteria();
@@ -59,14 +70,18 @@ public class AuditServiceImpl implements AuditService {
     @Override
     public void UpdateDisplay(int cid) {
         Boolean display = contestMapper.selectDisplayByCid(cid);
-        contestMapper.updateDisplayByCid(cid,display);
+        contestMapper.updateDisplayByCid(cid,!display);
     }
 
     private void setStatus(Contest contest){
-        Boolean checkStatus = contestMapper.selectCheckStatusByCid(contest.getId());
+        int checkStatus = contestMapper.selectCheckStatusByCid(contest.getId());
+        boolean display = contestMapper.selectDisplayByCid(contest.getId());
         String status = null;
-        if(checkStatus) status = "已审核";
-        else status = "未审核";
+        if(checkStatus == 0) status = "已审核";
+        else if(checkStatus == 1) status = "未审核";
+        else status = "审核未通过";
+        if(display) contest.setDisplay("已上线");
+        else contest.setDisplay("未上线");
         contest.setStatus(status);
     }
 }
