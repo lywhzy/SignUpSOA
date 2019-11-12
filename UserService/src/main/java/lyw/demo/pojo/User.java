@@ -1,29 +1,31 @@
 package lyw.demo.pojo;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 @Table(name = "user")
 @ToString
+@Getter
+@Setter
 public class User implements Serializable {
     @Id
     private Integer id;
 
-    private String name;
+    private String username;
 
-    private String phoneNumber;
+    private String phonenumber;
 
     private String email;
 
     private String password;
 
-    private Integer level;
+    private String level;
 
 }

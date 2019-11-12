@@ -1,13 +1,43 @@
 spring:
   application:
-    name: UseService
+    name: UserService
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: nb
     password: 654321
-    jdbc-url: jdbc:mysql://localhost:3306/signup?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
+    jdbc-url: jdbc:mysql://192.168.43.100:3306/signup?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
+  redis:
+    host: 192.168.43.100
+    port: 6379
+    #host: 47.101.198.33
+    #port: 33306
+    database: 0 #数据库索引（默认为0）
+    password:
+    jedis:
+      pool:
+        max-active: 8 #连接池最大连接数
+        max-wait: -1 #连接池最大阻塞等待时间
+        max-idle: 8 #连接池中的最大空闲连接
+        min-idle: 0 #连接池中的最小空闲连接
+      timeout: 1200
+  thymeleaf:
+    prefix: classpath:/templates/
+
+  mvc:
+    static-path-pattern: /**
+    view:
+      prefix: classpath:/templates/
+      suffix: .html
+
+server:
+  port: 8071
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:10086/eureka
+
+logging:
+  level:
+    root: info
+    lyw.demo.AOP: DEBUG

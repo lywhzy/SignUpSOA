@@ -1,0 +1,14 @@
+一直不明白spring security的登录逻辑，还要处理必须完成的认证授权加密
+学习过程中看别人都是使用的表单登录请求，而且是单独跳转登录页面完成
+
+spring security的默认登录数据是通过key/value的形式来传递的，默认情况下不支持json格式的登录数据，如何解决这种需求？
+用filter实现？
+分析源码 默认用户名密码提取在UsernamePasswordAuthenticationFilter过滤器中 通过request中的getParameter提取
+若想使用json传输，只需执行自定义功能过滤器
+
+通过学习，发现spring security默认提供弹窗认证，也可以自定义登录页面通过fromLogin()跳转该页面，但是模态窗口该如何解决跳转？
+
+启动报错：
+Failed to configure a DataSource: 'url' attribute is not specified and no embedded datasource could be configured.
+
+Reason: Failed to determine suitable jdbc url

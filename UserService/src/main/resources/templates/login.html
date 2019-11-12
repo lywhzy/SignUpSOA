@@ -1,0 +1,122 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>Signin</title>
+    <script src="../static/Js/jquery.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="../static/Css/bootstrap/3.3.6/bootstrap.css" rel="stylesheet" >
+    <!-- Custom styles for this template -->
+    <link href="../static/Css/login.css" rel="stylesheet">
+</head>
+<body onload="changeImg()">
+<div id="large-header">
+    <canvas id="demo-canvas">
+    </canvas>
+</div>
+
+<script type="text/javascript">
+    var code;//声明一个变量用于存储生成的验证码
+    document.getElementById("imgCode").onclick=changeImg;
+    function changeImg() {
+        var arrays = new Array('1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+        code = '';//重新初始化验证码
+        //alert(arrays.length);
+        //随机从数组中获取四个元素组成验证码
+        for (var i = 0; i < 4; i++) {
+            //随机获取一个数组的下标
+            var r = parseInt(Math.random() * arrays.length);
+            code += arrays[r];
+            //alert(arrays[r]);
+        }
+        //alert(code);
+        document.getElementById('imgCode').innerHTML = code;  //将验证码写入指定区域
+    }
+    function checkCode() {
+        var inputCode = document.getElementById("encode")
+        if (inputCode.value.toLowerCase() === code.toLowerCase()){
+            return true
+        }
+        return false
+    }
+</script>
+
+<script>
+    $(function () {
+
+        $("#encode").blur(function () {
+            if (checkCode()){
+                $("#loginSubmit").removeAttr("disabled");
+            }else {
+                changeImg()
+                // 禁用登录按钮
+                $("#loginSubmit").attr('disabled', "true");
+                window.alert("验证码错误!");
+            }
+            $("#encode").val("");
+        });
+
+        $("#loginSubmit").click(function () {
+            var username = $("#inputname").val()
+            var password = $("#inputPassword").val()
+            $.ajax({
+                url: '/login',              // 接收用户名和密码的地址
+                type: 'post',
+                data: {
+                    username: username,
+                    password: password
+                },
+                success: function (data) {
+                    if (data === 'error'){
+                        window.alert('用户名或密码输入不正确')
+                    }else{
+                        window.location.href = '/homePage?name=' + username
+                    }
+                },
+                error: function () {
+                    window.alert('某个地方出了问题')
+                }
+            })
+        })
+    })
+</script>
+
+
+<!-- 網狀特效1 -->
+<script src="../static/Js/EasePack.min.js"></script>
+<script src="../static/Js/TweenLite.min.js"></script>
+<script src="../static/Js/helloweb.js"></script>
+<!-- 網狀特效2 -->
+<div class="text-center">
+    <form class="form-signin" th:action="@{/login}" method="post">
+
+        <!--<img class="mb-4" src="/docs/4.3/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">-->
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <div class="formDiv form-group">
+            <!--<label for="inputname" class="sr-only">Email address</label>-->
+            <input name="username" type="text" id="inputname" class="form-control" placeholder="用户名" required autofocus autocomplete="off">
+        </div>
+        <div class="formDiv form-group">
+            <!--<label for="inputPassword" class="sr-only">Password</label>-->
+            <input name="password" type="password" id="inputPassword" class="form-control" placeholder="密码" required autocomplete="off">
+        </div>
+        <div class="formDiv form-group">
+            <!--<label for="encode">验证码</label>-->
+            <input type="text" id="encode" class="form-control" placeholder="验证码" required autocomplete="off">
+            <!--<input type="text" id="encode" class="form-control" placeholder="验证码">-->
+            <span id="imgCode" title="看不清，换一张"></span>
+        </div>
+
+        <div class="formDiv form-group">
+            <button class="btn btn-lg btn-primary btn-block" type="submit" id="loginSubmit">Sign in</button>
+            <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+        </div>
+    </form>
+</div>
+</body>
+</html>
