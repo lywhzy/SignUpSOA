@@ -28,6 +28,7 @@ public class Contest implements Serializable {
 
     private Date enddate;
 
+
     @Transient
     private List<User> users;
     @Transient

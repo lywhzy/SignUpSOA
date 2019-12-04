@@ -73,6 +73,11 @@ public class AuditServiceImpl implements AuditService {
         contestMapper.updateDisplayByCid(cid,!display);
     }
 
+    @Override
+    public Contest getContest(int cid) {
+        return contestMapper.selectByPrimaryKey(cid);
+    }
+
     private void setStatus(Contest contest){
         int checkStatus = contestMapper.selectCheckStatusByCid(contest.getId());
         boolean display = contestMapper.selectDisplayByCid(contest.getId());

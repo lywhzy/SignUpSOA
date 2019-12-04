@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        user.setLevel("admin");
+        user.setLevel("ROLE_ADMIN");
         userMapper.insertSelective(user);
     }
 
@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
     public List<User> findRoots() {
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("level","admin");
+        criteria.andEqualTo("level","ROLE_ADMIN");
         List<User> users = userMapper.selectByExample(example);
         return users;
     }

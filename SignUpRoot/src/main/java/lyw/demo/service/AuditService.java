@@ -19,5 +19,6 @@ public interface AuditService {
 
     void UpdateDisplay(int cid);
 
+    Contest getContest(int cid);
 
 }

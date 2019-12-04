@@ -28,4 +28,7 @@ public class Column_info implements Serializable {
     private String value;
     @Transient
     private List<String> alternatives;
+
+    @Transient
+    private List<Alternative> alternativeList;
 }

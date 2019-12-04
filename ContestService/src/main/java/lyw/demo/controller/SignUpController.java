@@ -72,6 +72,7 @@ public class SignUpController extends BaseController{
     @GetMapping(value = "update")
     public String update(String jsonStr){
         try{
+            if(super.uid==null) return null;
             JSONObject jsonObject = JSONObject.parseObject(jsonStr);
             for(Map.Entry entry : jsonObject.entrySet()){
                 Column_value column_value = getColumn_value(entry);
@@ -91,6 +92,7 @@ public class SignUpController extends BaseController{
     @GetMapping(value = "keep")
     public String keep(String jsonStr){
         try{
+            if(super.uid==null) return null;
             System.out.println(jsonStr);
             JSONObject jsonObject = JSONObject.parseObject(jsonStr);
             for(Map.Entry entry : jsonObject.entrySet()){
@@ -111,6 +113,7 @@ public class SignUpController extends BaseController{
     @GetMapping(value = "signup")
     public String signup(String jsonStr){
         try{
+            if(super.uid==null) return null;
             JSONObject jsonObject = JSONObject.parseObject(jsonStr);
             for(Map.Entry entry : jsonObject.entrySet()){
                 Column_value column_value = getColumn_value(entry);

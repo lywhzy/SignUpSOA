@@ -164,10 +164,12 @@ public class ColumnServiceImpl implements ColumnService {
         if(key.equals("手机号")||key.equals("邮箱")){
             clazz = User.class;
             Method method = clazz.getMethod(methodName,null);
+            if(user != null)
             value = (String) method.invoke(user,null);
         }else{
             clazz = User_info.class;
             Method method = clazz.getMethod(methodName,null);
+            if(user_info != null)
             value = (String) method.invoke(user_info,null);
         }
         if(!StringUtils.isBlank(value))

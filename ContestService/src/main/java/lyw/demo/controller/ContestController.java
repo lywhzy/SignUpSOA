@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import lyw.demo.pojo.Contest;
 import lyw.demo.service.ContestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@CrossOrigin
 public class ContestController extends BaseController{
 
     @Autowired
@@ -53,6 +55,8 @@ public class ContestController extends BaseController{
 
     @GetMapping("checkSignUp")
     public String CheckSignUp(int cid){
+        Integer uid = super.uid;
+        if(uid == null) return null;
         if(contestService.CheckSign(uid,cid)) return "true";
         else return "false";
     }

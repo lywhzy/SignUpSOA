@@ -30,4 +30,5 @@ public interface ContestMapper extends Mapper<Contest> {
     @Select("select checkstatus from status where cid=#{cid}")
     int selectCheckStatusByCid(@Param("cid") int cid);
 
+
 }
