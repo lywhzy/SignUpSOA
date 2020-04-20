@@ -1,6 +1,7 @@
 package lyw.demo.mapper;
 
 import lyw.demo.pojo.Contest;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -12,7 +13,7 @@ public interface ContestMapper extends Mapper<Contest> {
     @Select("select * from contest,status where contest.id=status.cid and status.checkstatus=0")
     List<Contest> findNotAudit();
 
-    @Select("select status.display from status where status.id=#{cid}")
+    @Select("select status.display from status where status.cid=#{cid}")
     Boolean selectDisplayByCid(int cid);
 
     @Update("update status set status.checkstatus=1,status.display=1 where status.cid=#{cid}")
@@ -30,5 +31,10 @@ public interface ContestMapper extends Mapper<Contest> {
     @Select("select checkstatus from status where cid=#{cid}")
     int selectCheckStatusByCid(@Param("cid") int cid);
 
+    @Insert("insert into user_contest(cid,uid) value(#{cid},#{uid})")
+    void insertRelation(@Param("uid") int uid, @Param("cid") int cid);
+
+    @Insert("insert into status(cid,checkstatus,display) value(#{cid},0,0)")
+    void insertStatus(int cid);
 
 }

@@ -11,6 +11,7 @@ import lyw.demo.service.AlternativeService;
 import lyw.demo.service.AuditService;
 import lyw.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import tk.mybatis.mapper.entity.Example;
 
@@ -43,6 +44,9 @@ public class RestController {
     @Autowired
     private Column_valueMapper column_valueMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
 
     /**
      * 得到未通过审核的比赛列表
@@ -67,6 +71,49 @@ public class RestController {
     @GetMapping("getAllCVByCid")
     public String getAllCVByCid(int cid){
         return null;
+    }
+
+    @PostMapping("addContest")
+    public String addContest(@RequestBody String jsonStr){
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+        JSONObject c = jsonObject.getJSONObject("contest");
+        Contest contest = JSONObject.parseObject(c.toJSONString(),Contest.class);
+        JSONArray array = jsonObject.getJSONArray("list");
+
+        contestMapper.insertSelective(contest);
+
+        Example example = new Example(Contest.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name",contest.getName()).andEqualTo("characterization",contest.getCharacterization());
+        Contest contest1 = contestMapper.selectOneByExample(example);
+
+        contestMapper.insertRelation(1,contest1.getId());
+        contestMapper.insertStatus(contest1.getId());
+
+        for(int i = 0;i < array.size(); ++i){
+            JSONObject object = (JSONObject) array.get(i);
+            Column_info column_info = new Column_info();
+            column_info.setName(object.getString("name"));
+            column_info.setIcontype(object.getString("type"));
+            column_info.setCid(contest1.getId());
+            column_info.setChoose(true);
+            column_info.setSequence(i+1);
+            column_infoMapper.insert(column_info);
+
+            column_info = column_infoMapper.selectOne(column_info);
+
+            JSONArray jsonArray = (JSONArray) object.get("options");
+            for(int j = 0;j < jsonArray.size();++j){
+                String value = jsonArray.getString(j);
+                Alternative alternative = new Alternative();
+                alternative.setValue(value);
+                alternative.setUser_permit(false);
+                alternative.setCid(column_info.getId());
+                alternativeMapper.insert(alternative);
+            }
+        }
+
+        return "true";
     }
 
     @PostMapping("editContest")
@@ -102,6 +149,7 @@ public class RestController {
         //删除报名用户关系
         column_valueMapper.deleteContestRelation(contest.getId());
 
+        redisTemplate.delete("column_infos" + contest.getId());
 
         for(int i = 0;i < array.size(); ++i){
             JSONObject object = (JSONObject) array.get(i);

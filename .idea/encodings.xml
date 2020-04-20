@@ -3,6 +3,7 @@
   <component name="Encoding" addBOMForNewFiles="with NO BOM">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/ContestService" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ContestService_NEW" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/EurekaServer" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/SignUpRoot" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/UserService" charset="UTF-8" />

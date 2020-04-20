@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedOutputStream;
@@ -38,7 +39,7 @@ public class ExportController {
     @RequestMapping(value = "/download", produces = { "application/json;charset=UTF-8" }, method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView downloadFile(HttpServletResponse response,int cid) {
-        List<LanQiao> userlList = new ArrayList<>();
+        List<List<Column_value>> userlList = new ArrayList<>();
 
         List<Column_info> list = auditService.findByCid(cid);
 
@@ -52,31 +53,31 @@ public class ExportController {
         String[] headers = strings.toArray(new String[0]);
 
 
-        List<Column_value> list1 = column_valueMapper.selectAll();
+        Example example = new Example(Column_value.class);
+        Example.Criteria criteria = example.createCriteria();
 
-        LanQiao lanQiao = null;
+        for (Column_info column_info : list) {
+            criteria = criteria.orEqualTo("cid",column_info.getId());
+        }
+        example.setOrderByClause("id asc");
+
+        List<Column_value> list1 = column_valueMapper.selectByExample(example);
+
+
+        List<Column_value> stringList = null;
         for(int i = 0;i < list1.size();++i){
-            switch (i%6){
-                case 0: {
-                    lanQiao = new LanQiao();
-                    lanQiao.setName(list1.get(i).getValue());
-                    break;
-                }
-                case 1: lanQiao.setStr(list1.get(i).getValue());
-                        break;
-                case 2: lanQiao.setStr1(list1.get(i).getValue());
-                        break;
-                case 3: lanQiao.setStr2(list1.get(i).getValue());
-                        break;
-                case 4: lanQiao.setStr3(list1.get(i).getValue());
-                        break;
-                case 5: {
-                    lanQiao.setStr4(list1.get(i).getValue());
-                    userlList.add(lanQiao);
-                }
+            if(i % headers.length == 0){
+                stringList = new ArrayList<>();
+                stringList.add(list1.get(i));
+            }else if(i % headers.length == headers.length-1){
+                stringList.add(list1.get(i));
+                stringList.sort(Comparator.comparing(Column_value::getCid));
+                userlList.add(stringList);
+                System.out.println(Arrays.toString(stringList.toArray()));
+            }else{
+                stringList.add(list1.get(i));
             }
         }
-
 
         // 可更改文件名
         String fileName = contest.getName() + "报名信息表";
@@ -130,17 +131,18 @@ public class ExportController {
             while (it.hasNext()){
                 index++;
                 row = sheet.createRow(index);
-                LanQiao lanQiao= (LanQiao) it.next();
+                List<Column_value> lanQiao= (List<Column_value>) it.next();
                 // 利用反射，根据javabean属性的先后顺序，动态调用get()方法得到属性
-                Field[] fields = lanQiao.getClass().getDeclaredFields();
+//                Field[] fields = lanQiao.getClass().getDeclaredFields();
                 for (short i = 0; i < headers.length; ++i){
                     XSSFCell cell = row.createCell(i);
-                    Field field = fields[i];
-                    String fieldName = field.getName();
-                    String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-                    Class tcls = lanQiao.getClass();
-                    Method getMethod = tcls.getMethod(getMethodName, new Class[] {});
-                    Object value = getMethod.invoke(lanQiao, new Object[] {});
+//                    Field field = fields[i];
+//                    String fieldName = field.getName();
+//                    String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+//                    Class tcls = lanQiao.getClass();
+//                    Method getMethod = tcls.getMethod(getMethodName, new Class[] {});
+//                    Object value = getMethod.invoke(lanQiao, new Object[] {});
+                    Object value = lanQiao.get(i).getValue();
                     // 判断值的类型后进行强制类型转换
                     String textValue = null;
                     // 其它数据类型都当做字符串简单处理

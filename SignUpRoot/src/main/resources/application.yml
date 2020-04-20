@@ -5,7 +5,19 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: nb
     password: 654321
-    url: jdbc:mysql://218.197.95.6:3306/signup?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
+    url: jdbc:mysql://localhost:3306/signup?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT&useSSL=false
+  redis:
+    host: localhost
+    database: 0
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 2000
 
 server:
   port: 8072
